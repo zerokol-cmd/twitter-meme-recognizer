@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Message Analyzer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      width: 400px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+    }
+    
+    .container {
+      padding: 20px;
+    }
+    
+    .header {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .header h1 {
+      font-size: 18px;
+      color: #667eea;
+      margin-bottom: 5px;
+    }
+    
+    .header p {
+      font-size: 12px;
+      color: #999;
+    }
+    
+    .status {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .status-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+    
+    .status-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    
+    .status-indicator.connected {
+      background: #4ade80;
+      animation: pulse 2s infinite;
+    }
+    
+    .status-indicator.disconnected {
+      background: #ef4444;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .results {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    
+    .results h3 {
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: #667eea;
+    }
+    
+    .result-item {
+      background: #f5f5f5;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      border-left: 3px solid #667eea;
+    }
+    
+    .result-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .result-class {
+      font-weight: bold;
+      color: #667eea;
+    }
+    
+    .result-prob {
+      color: #666;
+      font-size: 11px;
+      margin-top: 5px;
+    }
+    
+    .empty-state {
+      color: #999;
+      font-size: 13px;
+      text-align: center;
+      padding: 20px 10px;
+    }
+    
+    .settings {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .settings-group {
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+    
+    .settings-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #667eea;
+    }
+    
+    .settings-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    
+    .settings-group button {
+      width: 100%;
+      padding: 8px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    
+    .settings-group button:hover {
+      background: #764ba2;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📊 Telegram Analyzer</h1>
+      <p>Auto-analyzes images in messages</p>
+    </div>
+    
+    <div class="status">
+      <div class="status-item">
+        <div class="status-indicator disconnected" id="serverStatus"></div>
+        <span id="serverStatusText">Checking server...</span>
+      </div>
+      <div class="status-item">
+        <div class="status-indicator" id="extensionStatus"></div>
+        <span>Extension active on Telegram Web</span>
+      </div>
+    </div>
+    
+    <div class="results">
+      <h3>Analysis Results</h3>
+      <div id="resultsList"></div>
+    </div>
+    
+    <div class="settings">
+      <div class="settings-group">
+        <label for="serverUrl">Server URL:</label>
+        <input type="text" id="serverUrl" placeholder="http://localhost:5000" />
+      </div>
+      <div class="settings-group">
+        <button id="saveSettingsBtn">Save Settings</button>
+      </div>
+      <div class="settings-group">
+        <button id="clearHistoryBtn" style="background: #ef4444;">Clear History</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
